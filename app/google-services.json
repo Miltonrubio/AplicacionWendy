@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "109498692475",
+    "project_id": "wendyapp-ebddd",
+    "storage_bucket": "wendyapp-ebddd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:109498692475:android:d422eed0b4e890f6b3c3de",
+        "android_client_info": {
+          "package_name": "com.example.aplicacionwendy"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCU_SZdsnLFNy-hhVSN7ZKv6Bf2yQFn3Bc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

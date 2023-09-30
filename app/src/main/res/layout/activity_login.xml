@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:scrollbars="none"
+    android:paddingTop="20dp"
+    android:paddingBottom="15dp"
+    android:elevation="4dp"
+    android:padding="1dp"
+    tools:context=".LoginActivity"
+    android:background="@color/AzulFondo">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+
+            <TextView
+                android:id="@+id/tvForgotPassword"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="center"
+                android:text="Bienvenido"
+                android:textColor="@color/azulito"
+                android:textSize="36dp"
+                android:textStyle="bold"
+                android:gravity="left"
+                />
+
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:src="@drawable/logo"
+            android:layout_gravity="center"
+            />
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            app:endIconMode="custom"
+            app:endIconDrawable="@drawable/baseline_phone_24" >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/correoET"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Ingresa con tu Telefono"
+                android:textColorHint="@color/azulito"
+                android:textColor="#1A237E"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            app:endIconMode="custom"
+            app:endIconDrawable="@drawable/baseline_lock_24" >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/passwordET"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Contraseña"
+                android:textColorHint="@color/azulito"
+                android:inputType="textPassword"
+                android:textColor="#1A237E"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <Button
+            android:id="@+id/btnLogear"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/black"
+            android:paddingBottom="15dp"
+            android:clickable="true"
+            android:onClick="IniciarSession"
+            android:text="Iniciar Sesión"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:textColor="@color/azulito" />
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            >
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <CheckBox
+            android:id="@+id/checkBoxRememberMe"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Recordar datos"
+            android:textColor="@color/azulito"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+
+    </LinearLayout>
+</ScrollView>
