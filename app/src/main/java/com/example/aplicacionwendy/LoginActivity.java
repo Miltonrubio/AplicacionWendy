@@ -79,12 +79,10 @@ public class LoginActivity extends AppCompatActivity {
             inputPassword.setText(savedPassword);
             checkBoxRememberMe.setChecked(true);
 
-         /*   Intent intent = new Intent(LoginActivity.this, Activity_Binding.class);
+            Intent intent = new Intent(LoginActivity.this, Activity_Binding.class);
             startActivity(intent);
             finish();
 
-
-          */
         }
     }
 

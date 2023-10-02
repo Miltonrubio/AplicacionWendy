@@ -115,6 +115,7 @@ public class AdaptadorCitas extends RecyclerView.Adapter<AdaptadorCitas.ViewHold
                 String ID_cita = jsonObject2.optString("ID_cita", "");
                 String ID_usuario = jsonObject2.optString("ID_usuario", "");
                 String fecha_cita = jsonObject2.optString("fecha_cita", "");
+                String detalles_cita = jsonObject2.optString("detalles_cita", "");
                 String hora_cita = jsonObject2.optString("hora_cita", "");
                 String nombre = jsonObject2.optString("nombre", "");
                 String telefono = jsonObject2.optString("telefono", "");
@@ -123,12 +124,13 @@ public class AdaptadorCitas extends RecyclerView.Adapter<AdaptadorCitas.ViewHold
                 bundle.putString("ID_cita", ID_cita);
                 bundle.putString("ID_usuario", ID_usuario);
                 bundle.putString("fecha_cita", fecha_cita);
+                bundle.putString("detalles_cita", detalles_cita);
                 bundle.putString("hora_cita", hora_cita);
                 bundle.putString("nombre", nombre);
                 bundle.putString("telefono", telefono);
 
 
-                setTextViewText(holder.textNombreUsuario, nombre, "Nombre no disponible");
+                setTextViewText(holder.textNombreUsuario, detalles_cita, "Nombre no disponible");
                 setTextViewText(holder.textTelefonoPaciente, telefono, "Nombre no disponible");
                 setTextViewText(holder.fechadeCita, fecha_cita, "Nombre no disponible");
                 setTextViewText(holder.horaCita, hora_cita, "Nombre no disponible");
@@ -181,25 +183,24 @@ public class AdaptadorCitas extends RecyclerView.Adapter<AdaptadorCitas.ViewHold
             String[] keywords = query.toLowerCase().split(" ");
 
             for (JSONObject item : data) {
-                String ID_actividad = item.optString("ID_actividad", "").toLowerCase();
-                String nombre_actividad = item.optString("nombre_actividad", "").toLowerCase();
-                String descripcionActividad = item.optString("descripcionActividad", "").toLowerCase();
-                String estadoActividad = item.optString("estadoActividad", "").toLowerCase();
-                String fecha_inicio = item.optString("fecha_inicio", "").toLowerCase();
-                String fecha_fin = item.optString("fecha_fin", "").toLowerCase();
 
 
+
+
+                String ID_cita = item.optString("ID_cita", "").toLowerCase();
                 String ID_usuario = item.optString("ID_usuario", "").toLowerCase();
-                String ID_nombre_actividad = item.optString("ID_nombre_actividad", "").toLowerCase();
-                String permisos = item.optString("permisos", "").toLowerCase();
-                String correo = item.optString("correo", "").toLowerCase();
+                String fecha_cita = item.optString("fecha_cita", "").toLowerCase();
+                String detalles_cita = item.optString("detalles_cita", "").toLowerCase();
+                String hora_cita = item.optString("hora_cita", "").toLowerCase();
                 String telefono = item.optString("telefono", "").toLowerCase();
+                String nombre = item.optString("nombre", "").toLowerCase();
+
 
                 boolean matchesAllKeywords = true;
 
                 for (String keyword : keywords) {
-                    if (!(estadoActividad.contains(keyword) || descripcionActividad.contains(keyword) || nombre_actividad.contains(keyword) || ID_actividad.contains(keyword) ||
-                            fecha_inicio.contains(keyword) || fecha_fin.contains(keyword) || ID_usuario.contains(keyword) || ID_nombre_actividad.contains(keyword) || permisos.contains(keyword) || telefono.contains(keyword) || correo.contains(keyword))) {
+                    if (!(detalles_cita.contains(keyword) || fecha_cita.contains(keyword) || ID_cita.contains(keyword) || hora_cita.contains(keyword) ||
+                            nombre.contains(keyword) || telefono.contains(keyword) || ID_usuario.contains(keyword))) {
                         matchesAllKeywords = false;
                         break;
                     }

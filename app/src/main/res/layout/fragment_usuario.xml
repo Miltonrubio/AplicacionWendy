@@ -35,7 +35,7 @@
 
 
             <TextView
-                android:id="@+id/tvNombreMecanico"
+                android:id="@+id/tvNombreUsuario"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
@@ -50,44 +50,10 @@
     </LinearLayout>
 
 
-
-    <TextView
-        android:id="@+id/tvCorreo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:enabled="false"
-        android:layout_marginBottom="10dp"
-        android:text="Correo"
-        android:textColor="@color/azulito"
-        android:textSize="26dp"
-        tools:ignore="NotSibling" />
-
-
-    <TextView
-        android:id="@+id/tvRol"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tvCorreo"
-        android:layout_centerHorizontal="true"
-        android:enabled="false"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="10dp"
-        android:text="Rol"
-        android:textColor="@color/azulito"
-        android:textSize="26dp"
-        tools:ignore="NotSibling" />
-
     <TextView
         android:id="@+id/tvTel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tvCorreo"
         android:layout_centerHorizontal="true"
         android:enabled="false"
         android:layout_marginStart="10dp"
