@@ -2,7 +2,24 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-
     <color name="AzulFondo">#0d1027</color>
     <color name="azulito">#1ff0da</color>
+    <color name="bg">#F5F5F8</color>
+    <color name="border">#2C3742</color>
+    <color name="colorIcon">#6A717D</color>
+    <color name="bgApp">#F46672</color>
+    <color name="btnAzul">#666666</color>
+    <color name="bgSearch">#F3F5F7</color>
+    <color name="textbusqueda">#8FA5B7</color>
+    <color name="naranja">#F98424</color>
+    <color name="naranja_pastel">#FBBC88</color>
+    <color name="btnMorado">#333333</color>
+    <color name="colorSelectedCircle">#303F4B</color>
+    <color name="bgNav">#E8EDED</color>
+    <color name="rojo">#F45B69</color>
+    <color name="guardar">#00BBF9</color>
+    <color name="gris">#F5F5F8</color>
+    <color name="AzulVerdoso">#269FB6</color>
+
+
 </resources>

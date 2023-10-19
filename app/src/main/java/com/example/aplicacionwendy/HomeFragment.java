@@ -30,6 +30,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -68,6 +69,8 @@ public class HomeFragment extends Fragment implements AdaptadorCitas.OnActivityA
     private EditText editTextBusqueda;
     private FloatingActionButton botonAgregarCita;
 
+    Context context;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -78,7 +81,7 @@ public class HomeFragment extends Fragment implements AdaptadorCitas.OnActivityA
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        context=requireContext();
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("Credenciales", Context.MODE_PRIVATE);
 
          ID_usuario = sharedPreferences.getString("ID_usuario", "");
@@ -88,14 +91,16 @@ public class HomeFragment extends Fragment implements AdaptadorCitas.OnActivityA
 
         botonAgregarCita = view.findViewById(R.id.botonAgregarCita);
         recyclerViewCitas = view.findViewById(R.id.recyclerViewCitas);
+        TextView textViewBienvenido= view.findViewById(R.id.textViewBienvenido);
 
+        textViewBienvenido.setText("¡Bienvenido "+ nombre+ " !");
 
 
         recyclerViewCitas.setLayoutManager(new LinearLayoutManager(getContext()));
 
         if (isAdded()) {
 
-            adaptadorCitas = new AdaptadorCitas(dataList, requireContext(), this);
+            adaptadorCitas = new AdaptadorCitas(dataList, context, this);
         }
         recyclerViewCitas.setAdapter(adaptadorCitas);
         editTextBusqueda = view.findViewById(R.id.searchEditTextCitas);
@@ -200,7 +205,7 @@ public class HomeFragment extends Fragment implements AdaptadorCitas.OnActivityA
             }
         };
 
-        Volley.newRequestQueue(requireContext()).add(postrequest);
+        Volley.newRequestQueue(context).add(postrequest);
     }
 
 
@@ -209,7 +214,7 @@ public class HomeFragment extends Fragment implements AdaptadorCitas.OnActivityA
             @Override
             public void onResponse(String response) {
                 VerCitas(ID_usuario);
-              Toast.makeText(requireContext(), response, Toast.LENGTH_LONG).show();
+              Toast.makeText(context, response, Toast.LENGTH_LONG).show();
             Log.d("Respuesta de api para agregar: ",response);
 
             }
@@ -230,7 +235,7 @@ public class HomeFragment extends Fragment implements AdaptadorCitas.OnActivityA
             }
         };
 
-        Volley.newRequestQueue(requireContext()).add(postrequest);
+        Volley.newRequestQueue(context).add(postrequest);
     }
 
 

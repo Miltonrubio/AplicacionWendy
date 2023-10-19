@@ -59,8 +59,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Ingresa con tu Telefono"
-                android:textColorHint="@color/azulito"
-                android:textColor="#1A237E"
+                android:textColor="@color/white"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
@@ -82,7 +81,7 @@
                 android:hint="Contraseña"
                 android:textColorHint="@color/azulito"
                 android:inputType="textPassword"
-                android:textColor="#1A237E"
+                android:textColor="@color/white"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 

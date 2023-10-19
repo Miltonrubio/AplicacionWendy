@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import com.example.aplicacionwendy.R;
 import com.example.aplicacionwendy.databinding.ActivityBindingBinding;
 
 public class Activity_Binding extends AppCompatActivity {
@@ -20,25 +21,23 @@ public class Activity_Binding extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_binding);
 
-
         binding = ActivityBindingBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-            replaceFragment(new HomeFragment());
-            getMenuInflater().inflate(R.menu.menu, binding.bottomNavigationView.getMenu());
 
-            binding.bottomNavigationView.setOnItemSelectedListener(item -> {
-                switch (item.getItemId()) {
-                    case (R.id.home):
-                        replaceFragment(new HomeFragment());
-                        break;
-                    case (R.id.usuario):
-                        replaceFragment(new UsuarioFragment());
-                        break;
+        binding.bottomNavigationView.setOnItemSelectedListener(item -> {
+            switch (item.getItemId()) {
+                case (R.id.home):
+                    replaceFragment(new HomeFragment());
+                    break;
+                case (R.id.usuario):
+                    replaceFragment(new UsuarioFragment());
+                    break;
 
-                }
-                return true;
-            });
+            }
+            return true;
+        });
+        replaceFragment(new HomeFragment());
 
     }
 
@@ -48,6 +47,7 @@ public class Activity_Binding extends AppCompatActivity {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frame_layouts_fragments, fragment);
         fragmentTransaction.commit();
+
     }
 
 }

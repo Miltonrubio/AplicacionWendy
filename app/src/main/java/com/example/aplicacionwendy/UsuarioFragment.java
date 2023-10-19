@@ -52,12 +52,12 @@ public class UsuarioFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_usuario, container, false);
 
-        TextView tvNombreMecanico = view.findViewById(R.id.tvNombreUsuario);
-        TextView tvTel= view.findViewById(R.id.tvTel);
-        ImageView ImagenSesionIniciada=  view.findViewById(R.id.ImagenSesionIniciada);
+        TextView tvNombreMecanico = view.findViewById(R.id.textNombreUsuario);
+        TextView tvTel= view.findViewById(R.id.textTelefonoUsuario);
+        ImageView ImagenSesionIniciada=  view.findViewById(R.id.iconImageView);
 
 
-        Button customButton = view.findViewById(R.id.customButton);
+        Button customButton = view.findViewById(R.id.cerrarSesion);
 
 
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("Credenciales", Context.MODE_PRIVATE);

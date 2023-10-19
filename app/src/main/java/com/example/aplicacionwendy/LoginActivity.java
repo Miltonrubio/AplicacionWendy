@@ -206,7 +206,6 @@ public class LoginActivity extends AppCompatActivity {
         StringRequest request2 = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             public void onResponse(String response) {
 
-                MandarNotificacion(str_token);
                 Toast.makeText(LoginActivity.this, "Token actualizado", Toast.LENGTH_LONG).show();
 
             }
@@ -222,40 +221,6 @@ public class LoginActivity extends AppCompatActivity {
                 params.put("opcion", "2");
                 params.put("token", str_token);
                 params.put("ID_usuario", ID_usuario);
-                return params;
-            }
-        };
-
-        RequestQueue requestQueue = Volley.newRequestQueue(LoginActivity.this);
-        requestQueue.add(request2);
-
-    }
-
-
-
-    public void MandarNotificacion(String token) {
-
-
-        StringRequest request2 = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
-            public void onResponse(String response) {
-
-                Toast.makeText(LoginActivity.this, "Se envio la notificacion", Toast.LENGTH_LONG).show();
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-                Toast.makeText(LoginActivity.this, "No se envio la notificacion", Toast.LENGTH_LONG).show();
-            }
-        }
-        ) {
-            protected Map<String, String> getParams() throws AuthFailureError {
-
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("opcion", "3");
-                params.put("deviceToken", token);
-                params.put("titulonotificacion", "Bienivenido a DODODC");
-                params.put("titulonotificacion", "Gracias por unirte ;)");
                 return params;
             }
         };

@@ -59,6 +59,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.text.DateFormatSymbols;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -80,26 +81,12 @@ public class AdaptadorCitas extends RecyclerView.Adapter<AdaptadorCitas.ViewHold
     String IDSesionIniciada;
     private List<JSONObject> filteredData;
     private List<JSONObject> data;
-    private static final int PERMISSIONS_REQUEST_LOCATION = 1;
-
-
-    public AdaptadorCitas(List<JSONObject> data, Context context) {
-        this.data = data;
-        this.context = context;
-        this.filteredData = new ArrayList<>(data);
-    }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        if (viewType == VIEW_TYPE_ITEM) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_citas, parent, false);
             return new ViewHolder(view);
-        } else {
-
-            View errorView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_nocitas, parent, false);
-            return new ViewHolder(errorView);
-        }
 
     }
 
@@ -132,8 +119,38 @@ public class AdaptadorCitas extends RecyclerView.Adapter<AdaptadorCitas.ViewHold
 
                 setTextViewText(holder.textNombreUsuario, detalles_cita, "Nombre no disponible");
                 setTextViewText(holder.textTelefonoPaciente, telefono, "Nombre no disponible");
-                setTextViewText(holder.fechadeCita, fecha_cita, "Nombre no disponible");
-                setTextViewText(holder.horaCita, hora_cita, "Nombre no disponible");
+
+                try {
+                    SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+                    Date date = inputFormat.parse(fecha_cita);
+                    SimpleDateFormat outputDayOfWeek = new SimpleDateFormat("EEEE",new Locale("es", "ES"));
+                    String dayOfWeek = outputDayOfWeek.format(date);
+                    SimpleDateFormat outputFormat = new SimpleDateFormat("d 'de' MMMM 'de' yyyy", new Locale("es", "ES"));
+                    String formattedDate = outputFormat.format(date);
+
+                    // Imprimir el resultado
+                    System.out.println("Día de la semana: " + dayOfWeek);
+                    System.out.println("Fecha formateada: " + formattedDate);
+
+                    setTextViewText(holder.fechadeCita, "El "+ dayOfWeek+ " " +formattedDate, "Fecha no disponible");
+
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+
+
+                try {
+                    SimpleDateFormat inputFormat = new SimpleDateFormat("HH:mm:ss");
+                    Date time = inputFormat.parse(hora_cita);
+                    SimpleDateFormat outputFormat = new SimpleDateFormat("'A las' h:mm a");
+                    String formattedTime = outputFormat.format(time);
+
+                    setTextViewText(holder.horaCita, formattedTime, "Nombre no disponible");
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
 
             } catch (Exception e) {
                 throw new RuntimeException(e);
@@ -146,21 +163,14 @@ public class AdaptadorCitas extends RecyclerView.Adapter<AdaptadorCitas.ViewHold
     @Override
     public int getItemCount() {
 
-        //return filteredData.size();
-        return filteredData.isEmpty() ? 1 : filteredData.size();
-
+        return  filteredData.size();
     }
 
-    @Override
-    public int getItemViewType(int position) {
-        return filteredData.isEmpty() ? VIEW_TYPE_ERROR : VIEW_TYPE_ITEM;
-    }
 
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView textNombreUsuario,fechadeCita,horaCita, textTelefonoPaciente;
 
-        ImageView fotoDeUsuario;
 
 
         public ViewHolder(@NonNull View itemView) {
@@ -170,7 +180,6 @@ public class AdaptadorCitas extends RecyclerView.Adapter<AdaptadorCitas.ViewHold
             fechadeCita = itemView.findViewById(R.id.fechadeCita);
             horaCita = itemView.findViewById(R.id.horaCita);
             textTelefonoPaciente = itemView.findViewById(R.id.textTelefonoPaciente);
-            fotoDeUsuario = itemView.findViewById(R.id.fotoDeUsuario);
         }
     }
 

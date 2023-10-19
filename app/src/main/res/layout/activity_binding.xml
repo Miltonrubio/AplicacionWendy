@@ -40,6 +40,7 @@
         app:itemRippleColor="@color/azulito"
         android:outlineSpotShadowColor="@color/azulito"
         android:outlineAmbientShadowColor="@color/azulito"
+        app:menu="@menu/menu"
         />
 
 
