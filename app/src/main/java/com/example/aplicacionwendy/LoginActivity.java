@@ -66,6 +66,7 @@ public class LoginActivity extends AppCompatActivity {
         rq = Volley.newRequestQueue(context);
         inputUsername = findViewById(R.id.correoET);
         inputPassword = findViewById(R.id.passwordET);
+        TextView REGISTRASE= findViewById(R.id.REGISTRASE);
         checkBoxRememberMe = findViewById(R.id.checkBoxRememberMe);
 
 
@@ -84,6 +85,15 @@ public class LoginActivity extends AppCompatActivity {
             finish();
 
         }
+
+
+        REGISTRASE.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                com.example.aplicacionwendy.Adaptadores.Utils.EnviarAActividad(context, RegistrarNuevoUsuarioActivity.class, true);
+            }
+        });
     }
 
     private void tomarToken() {

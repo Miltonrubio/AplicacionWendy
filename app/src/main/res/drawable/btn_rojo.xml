@@ -1,0 +1,4 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/rojo" /> <!-- Color de fondo del botón -->
+    <corners android:radius="10dp" /> <!-- Radio de las esquinas para hacerlo redondeado -->
+</shape>
