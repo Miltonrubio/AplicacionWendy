@@ -5,10 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -17,7 +15,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.aplicacionwendy.Adaptadores.Utils;
+import com.example.aplicacionwendy.Adaptadores.Utiles;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -49,7 +47,7 @@ public class RegistrarNuevoUsuarioActivity extends AppCompatActivity {
 
         LayoutCerrar.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {  Utils.EnviarAActividad(context, LoginActivity.class, true);
+            public void onClick(View view) {  Utiles.EnviarAActividad(context, LoginActivity.class, true);
 
             }
         });
@@ -75,23 +73,21 @@ public class RegistrarNuevoUsuarioActivity extends AppCompatActivity {
         StringRequest request = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             public void onResponse(String response) {
 
-
-                if (response.equals("El número de teléfono ya está registrado. No se puede agregar el usuario.")) {
-                    Utils.crearToastPersonalizado(context, "El número de teléfono ya está registrado. Intente con otro numero de telefono");
+                if (response.equalsIgnoreCase("    El numero de telefono ya esta registrado")) {
+                    Utiles.crearToastPersonalizado(context, "Este número de teléfono ya está registrado.");
 
                 } else {
-                    Utils.crearToastPersonalizado(context, "Usuario creado perfectamente \nPor favor inicia sesion");
-                    Utils.EnviarAActividad(context, LoginActivity.class, true);
+                    Utiles.crearToastPersonalizado(context, "Usuario creado perfectamente \nPor favor inicia sesion");
+                    Utiles.EnviarAActividad(context, LoginActivity.class, true);
 
                 }
-
 
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
 
-                Utils.crearToastPersonalizado(context, "Hubo un error al crear el usuario");
+                Utiles.crearToastPersonalizado(context, "Hubo un error al crear el usuario. Revisa la conexi{on");
 
             }
         }
@@ -100,8 +96,8 @@ public class RegistrarNuevoUsuarioActivity extends AppCompatActivity {
 
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("opcion", "6");
-                params.put("telefonoUsuarioNuevo", telefono);
                 params.put("nombreUsuarioNuevo", nombre);
+                params.put("telefonoUsuarioNuevo", telefono);
                 params.put("claveUsuarioNuevo", clave);
                 return params;
             }

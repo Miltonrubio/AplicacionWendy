@@ -63,4 +63,9 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.guava:guava:32.1.2-jre")
 
+
+    implementation ("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
+    implementation("com.airbnb.android:lottie:6.1.0")
+
+    implementation ("com.makeramen:roundedimageview:2.3.0")
 }

@@ -1,10 +1,8 @@
 package com.example.aplicacionwendy;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 
 import com.android.volley.AuthFailureError;
@@ -15,10 +13,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.aplicacionwendy.Adaptadores.Utiles;
+import com.example.aplicacionwendy.Adaptadores.Utils;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.material.snackbar.Snackbar;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.util.Log;
@@ -27,15 +25,6 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.core.view.WindowCompat;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
-
-import com.example.aplicacionwendy.databinding.ActivityLoginBinding;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.json.JSONArray;
@@ -91,7 +80,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                com.example.aplicacionwendy.Adaptadores.Utils.EnviarAActividad(context, RegistrarNuevoUsuarioActivity.class, true);
+                Utiles.EnviarAActividad(context, RegistrarNuevoUsuarioActivity.class, true);
             }
         });
     }

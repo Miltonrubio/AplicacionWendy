@@ -1,18 +1,18 @@
 package com.example.aplicacionwendy;
 
-import android.app.Activity;
+import static com.example.aplicacionwendy.Adaptadores.Utiles.ModalRedondeado;
+
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,13 +23,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.Spinner;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -39,23 +36,18 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.example.aplicacionwendy.Adaptadores.AdaptadorCitas;
+import com.example.aplicacionwendy.Adaptadores.Utiles;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import android.Manifest;
 
 public class HomeFragment extends Fragment implements AdaptadorCitas.OnActivityActionListener {
 
@@ -71,6 +63,17 @@ public class HomeFragment extends Fragment implements AdaptadorCitas.OnActivityA
 
     Context context;
 
+
+    RelativeLayout ContenedorContenido;
+
+    ConstraintLayout ContenedorSinInternet;
+    ConstraintLayout ContenedorSinContenido;
+
+    AlertDialog.Builder builder;
+
+    AlertDialog modalCargando;
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -81,31 +84,34 @@ public class HomeFragment extends Fragment implements AdaptadorCitas.OnActivityA
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        context=requireContext();
+        context = requireContext();
+
+        builder = new AlertDialog.Builder(context);
+        builder.setCancelable(false);
+
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("Credenciales", Context.MODE_PRIVATE);
 
-         ID_usuario = sharedPreferences.getString("ID_usuario", "");
+        ID_usuario = sharedPreferences.getString("ID_usuario", "");
         String nombre = sharedPreferences.getString("nombre", "");
         String correo = sharedPreferences.getString("correo", "");
         String telefono = sharedPreferences.getString("telefono", "");
 
         botonAgregarCita = view.findViewById(R.id.botonAgregarCita);
         recyclerViewCitas = view.findViewById(R.id.recyclerViewCitas);
-        TextView textViewBienvenido= view.findViewById(R.id.textViewBienvenido);
+        TextView textViewBienvenido = view.findViewById(R.id.textViewBienvenido);
 
-        textViewBienvenido.setText("¡Bienvenido "+ nombre+ " !");
+        ContenedorSinInternet = view.findViewById(R.id.ContenedorSinInternet);
+        ContenedorContenido = view.findViewById(R.id.ContenedorContenido);
+        ContenedorSinContenido = view.findViewById(R.id.ContenedorSinContenido);
+        ImageView btnAgregarCita = view.findViewById(R.id.btnAgregarCita);
+
+        textViewBienvenido.setText("¡Bienvenido " + nombre + " !");
 
 
-        recyclerViewCitas.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        if (isAdded()) {
-
-            adaptadorCitas = new AdaptadorCitas(dataList, context, this);
-        }
+        recyclerViewCitas.setLayoutManager(new LinearLayoutManager(context));
+        adaptadorCitas = new AdaptadorCitas(dataList, context, this);
         recyclerViewCitas.setAdapter(adaptadorCitas);
         editTextBusqueda = view.findViewById(R.id.searchEditTextCitas);
-
-
 
 
         editTextBusqueda.addTextChangedListener(new TextWatcher() {
@@ -126,6 +132,54 @@ public class HomeFragment extends Fragment implements AdaptadorCitas.OnActivityA
         });
 
         VerCitas(ID_usuario);
+
+
+        btnAgregarCita.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                View customView = LayoutInflater.from(view.getContext()).inflate(R.layout.registrar_cita, null);
+
+                builder.setView(ModalRedondeado(context, customView));
+                AlertDialog dialogAgregarProduccion = builder.create();
+                dialogAgregarProduccion.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                dialogAgregarProduccion.show();
+
+                /*
+
+                final EditText editText2 = dialogView.findViewById(R.id.editText2);
+                final DatePicker datePicker = dialogView.findViewById(R.id.datePicker);
+                final TimePicker timePicker = dialogView.findViewById(R.id.timePicker);
+
+                builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Obtener el texto del EditText
+                        String descripcion = editText2.getText().toString();
+
+                        // Obtener la fecha seleccionada del DatePicker y formatearla
+                        int year = datePicker.getYear();
+                        int month = datePicker.getMonth() + 1; // Sumar 1 ya que los meses van de 0 a 11
+                        int dayOfMonth = datePicker.getDayOfMonth();
+                        String fechaFormateada = String.format("%04d-%02d-%02d", year, month, dayOfMonth);
+
+                        // Obtener la hora y minuto seleccionados del TimePicker y formatearlos
+                        int hourOfDay = timePicker.getHour();
+                        int minute = timePicker.getMinute();
+                        String horaFormateada = String.format("%02d:%02d", hourOfDay, minute);
+
+                        // Llamar a tu método AgregarCita() con los valores formateados
+                        AgregarCita(descripcion, fechaFormateada, horaFormateada);
+                    }
+                });
+
+                builder.setNegativeButton("Cancelar", null);
+*/
+
+            }
+        });
+
         botonAgregarCita.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -172,29 +226,44 @@ public class HomeFragment extends Fragment implements AdaptadorCitas.OnActivityA
 
 
     private void VerCitas(String idusuario) {
+
+        dataList.clear();
+
+        modalCargando = Utiles.ModalCargando(context, builder);
         StringRequest postrequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
                     JSONArray jsonArray = new JSONArray(response);
-                    dataList.clear();
 
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
 
                         dataList.add(jsonObject);
                     }
+
+                    if (dataList.size() > 0) {
+
+                        mostrarYOcultar("contenido");
+                    } else {
+
+                        mostrarYOcultar("SinContenido");
+                    }
+
                     adaptadorCitas.notifyDataSetChanged();
                     adaptadorCitas.setFilteredData(dataList);
                     adaptadorCitas.filter("");
+
+
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    mostrarYOcultar("SinContenido");
+
                 }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
+                mostrarYOcultar("SinInternet");
             }
         }) {
             protected Map<String, String> getParams() {
@@ -209,13 +278,43 @@ public class HomeFragment extends Fragment implements AdaptadorCitas.OnActivityA
     }
 
 
+    private void mostrarYOcultar(String estado) {
+
+
+        if (estado.equalsIgnoreCase("SinContenido")) {
+            ContenedorContenido.setVisibility(View.GONE);
+            ContenedorSinInternet.setVisibility(View.GONE);
+            ContenedorSinContenido.setVisibility(View.VISIBLE);
+        } else if (estado.equalsIgnoreCase("SinInternet")) {
+
+            ContenedorContenido.setVisibility(View.GONE);
+            ContenedorSinInternet.setVisibility(View.VISIBLE);
+            ContenedorSinContenido.setVisibility(View.GONE);
+        } else {
+            ContenedorContenido.setVisibility(View.VISIBLE);
+            ContenedorSinInternet.setVisibility(View.GONE);
+            ContenedorSinContenido.setVisibility(View.GONE);
+
+        }
+
+        onLoadComplete();
+
+    }
+
+    private void onLoadComplete() {
+        if (modalCargando.isShowing() && modalCargando != null) {
+            modalCargando.dismiss();
+        }
+    }
+
+
     private void AgregarCita(String detalles_cita, String fecha_cita, String hora_cita) {
         StringRequest postrequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 VerCitas(ID_usuario);
-              Toast.makeText(context, response, Toast.LENGTH_LONG).show();
-            Log.d("Respuesta de api para agregar: ",response);
+                Toast.makeText(context, response, Toast.LENGTH_LONG).show();
+                Log.d("Respuesta de api para agregar: ", response);
 
             }
         }, new Response.ErrorListener() {

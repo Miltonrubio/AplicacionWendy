@@ -1,84 +1,33 @@
-package com.example.aplicacionwendy;
-import static android.app.Activity.RESULT_OK;
+package com.example.aplicacionwendy.Adaptadores;
 import static android.app.PendingIntent.getActivity;
 
-import static androidx.core.app.ActivityCompat.startActivityForResult;
-import static androidx.core.content.ContextCompat.startActivity;
-
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.location.Location;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.provider.MediaStore;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.core.content.FileProvider;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.example.aplicacionwendy.R;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.IOException;
-import java.text.DateFormatSymbols;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-
-import android.Manifest;
 
 
 public class AdaptadorCitas extends RecyclerView.Adapter<AdaptadorCitas.ViewHolder> {
 
-
-    private static final int VIEW_TYPE_ERROR = 0;
-    private static final int VIEW_TYPE_ITEM = 1;
-
     private Context context;
-    String IDSesionIniciada;
     private List<JSONObject> filteredData;
     private List<JSONObject> data;
 
@@ -93,10 +42,6 @@ public class AdaptadorCitas extends RecyclerView.Adapter<AdaptadorCitas.ViewHold
     @SuppressLint("ResourceAsColor")
     public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
 
-         context = holder.itemView.getContext();
-
-
-        if (getItemViewType(position) == VIEW_TYPE_ITEM) {
             try {
                 JSONObject jsonObject2 = filteredData.get(position);
                 String ID_cita = jsonObject2.optString("ID_cita", "");
@@ -155,10 +100,8 @@ public class AdaptadorCitas extends RecyclerView.Adapter<AdaptadorCitas.ViewHold
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
-        }
 
     }
-
 
     @Override
     public int getItemCount() {
@@ -192,7 +135,6 @@ public class AdaptadorCitas extends RecyclerView.Adapter<AdaptadorCitas.ViewHold
             String[] keywords = query.toLowerCase().split(" ");
 
             for (JSONObject item : data) {
-
 
 
 

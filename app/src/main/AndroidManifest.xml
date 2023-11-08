@@ -38,7 +38,7 @@
         </activity>
 
         <service
-            android:name=".MyFirebaseService"
+            android:name=".Adaptadores.MyFirebaseService"
             android:exported="true"
             android:stopWithTask="false">
             <intent-filter>

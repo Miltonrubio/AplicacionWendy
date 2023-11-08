@@ -1,58 +1,41 @@
 package com.example.aplicacionwendy.Adaptadores;
 
-import android.app.Activity;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.os.Build;
 
-import androidx.cardview.widget.CardView;
+import androidx.core.app.NotificationCompat;
 
 import com.example.aplicacionwendy.R;
 
+import java.util.Random;
+
 public class Utils {
+    public static final String TAG = "ALPIX";
 
+    public static void showNotification(Context context, String title, String body) {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "com.example.channel");
 
+        builder.setSmallIcon(R.drawable.logo); // Reemplaza "ic_launcher" con el nombre de tu ícono de la aplicación
+        builder.setContentTitle(title);
+        builder.setContentText(body);
+        builder.setPriority(NotificationCompat.PRIORITY_MAX);
 
-    public static void crearToastPersonalizado(Context context, String mensaje) {
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View layout = inflater.inflate(R.layout.toast_con_logo, null);
+        NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        ImageView logoImage = layout.findViewById(R.id.logo_image);
-        TextView toastText = layout.findViewById(R.id.toast_text);
-        logoImage.setImageResource(R.drawable.logo);
-        toastText.setText(mensaje);
-
-        Toast toast = new Toast(context);
-        toast.setDuration(Toast.LENGTH_SHORT);
-        toast.setView(layout);
-        toast.show();
-    }
-
-
-    public static CardView ModalRedondeado(Context contextDialog, View viewModal) {
-
-        CardView cardView = new CardView(contextDialog);
-        cardView.setLayoutParams(new ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-        ));
-        cardView.setBackgroundResource(R.drawable.modalredondeado);
-        cardView.addView(viewModal);
-        return cardView;
-    }
-
-
-    public static void EnviarAActividad(Context context, Class<?> targetActivity, boolean finishCurrentActivity) {
-        Intent intent = new Intent(context, targetActivity);
-        context.startActivity(intent);
-        if (finishCurrentActivity && context instanceof Activity) {
-            ((Activity) context).finish();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            String channelId = "com.example.channel";
+            NotificationChannel channel = new NotificationChannel(channelId, "Wendy Channel",
+                    NotificationManager.IMPORTANCE_HIGH);
+            manager.createNotificationChannel(channel);
+            builder.setChannelId(channelId);
         }
+
+        manager.notify(new Random().nextInt(), builder.build());
     }
+
+
 
 }
