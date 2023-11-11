@@ -33,6 +33,9 @@ public class Activity_Binding extends AppCompatActivity {
                 case (R.id.usuario):
                     replaceFragment(new UsuarioFragment());
                     break;
+                    case (R.id.archivos):
+                    replaceFragment(new ArchivosFragment());
+                    break;
 
             }
             return true;
