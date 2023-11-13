@@ -21,6 +21,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -55,7 +56,8 @@ public class LoginActivity extends AppCompatActivity {
         rq = Volley.newRequestQueue(context);
         inputUsername = findViewById(R.id.correoET);
         inputPassword = findViewById(R.id.passwordET);
-        TextView REGISTRASE= findViewById(R.id.REGISTRASE);
+        Button btn_iniciar_sesion = findViewById(R.id.btn_iniciar_sesion);
+        TextView MandarARegistro = findViewById(R.id.MandarARegistro);
         checkBoxRememberMe = findViewById(R.id.checkBoxRememberMe);
 
 
@@ -76,7 +78,15 @@ public class LoginActivity extends AppCompatActivity {
         }
 
 
-        REGISTRASE.setOnClickListener(new View.OnClickListener() {
+        btn_iniciar_sesion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                IniciarSession();
+            }
+        });
+
+
+        MandarARegistro.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -112,10 +122,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-    public void IniciarSession(View view) {
-        IniciarSession();
-    }
-
     private void IniciarSession() {
         String telefono = inputUsername.getText().toString();
         String clave = inputPassword.getText().toString();
@@ -127,7 +133,6 @@ public class LoginActivity extends AppCompatActivity {
             Login(telefono, clave);
         }
     }
-
 
 
     private void Login(String telefono, String clave) {
@@ -148,14 +153,14 @@ public class LoginActivity extends AppCompatActivity {
 
                                 JSONObject jsonObject = jsonArray.getJSONObject(i);
 
-                                String  ID_usuario = jsonObject.getString("ID_usuario");
-                                String nombre= jsonObject.getString("nombre");
-                                String clave= jsonObject.getString("clave");
-                                String telefono= jsonObject.getString("telefono");
+                                String ID_usuario = jsonObject.getString("ID_usuario");
+                                String nombre = jsonObject.getString("nombre");
+                                String clave = jsonObject.getString("clave");
+                                String telefono = jsonObject.getString("telefono");
 
                                 RegistrarToken(ID_usuario);
 
-                                guardarCredenciales(ID_usuario, nombre, clave,telefono,rememberMe);
+                                guardarCredenciales(ID_usuario, nombre, clave, telefono, rememberMe);
 
                             }
 
@@ -197,7 +202,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-
     public void RegistrarToken(String ID_usuario) {
 
         String str_token = personalToken;
@@ -228,7 +232,6 @@ public class LoginActivity extends AppCompatActivity {
         requestQueue.add(request2);
 
     }
-
 
 
 }
