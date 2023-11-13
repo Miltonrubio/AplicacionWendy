@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -39,6 +40,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
@@ -64,7 +68,7 @@ public class ArchivosFragment extends Fragment implements AdaptadorDocumentos.On
 
     Context context;
 
-
+    String ID_usuario;
     List<JSONObject> dataList = new ArrayList<>();
 
     AdaptadorDocumentos adaptadorDocumentos;
@@ -83,11 +87,13 @@ public class ArchivosFragment extends Fragment implements AdaptadorDocumentos.On
         adaptadorDocumentos = new AdaptadorDocumentos(dataList, context, this);
         recyclerViewDocs.setAdapter(adaptadorDocumentos);
 
-        //  VerDocs("1");
+
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("Credenciales", Context.MODE_PRIVATE);
+        ID_usuario = sharedPreferences.getString("ID_usuario", "");
+        VerDocs(ID_usuario);
 
 
         FloatingActionButton botonAgregarArchivo = view.findViewById(R.id.botonAgregarArchivo);
-
         botonAgregarArchivo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -165,7 +171,7 @@ public class ArchivosFragment extends Fragment implements AdaptadorDocumentos.On
             RequestBody requestBody = new MultipartBody.Builder()
                     .setType(MultipartBody.FORM)
                     .addFormDataPart("opcion", "7")
-                    .addFormDataPart("ID_usuario", "1")
+                    .addFormDataPart("ID_usuario", ID_usuario)
                     .addFormDataPart("archivo", fileName,
                             RequestBody.create(MediaType.parse("multipart/form-data"), fileBytes))
                     .build();
@@ -196,15 +202,78 @@ public class ArchivosFragment extends Fragment implements AdaptadorDocumentos.On
             Utiles.crearToastPersonalizado(context, "Archivo PDF enviado al servidor");
             Intent intent = new Intent(context, Activity_Binding.class);
             startActivity(intent);
+            VerDocs(ID_usuario);
         }
     }
 
+    private void VerDocs(String ID_usuario) {
+        dataList.clear();
 
+        OkHttpClient client = new OkHttpClient();
 
+        RequestBody requestBody = new FormBody.Builder()
+                .add("opcion", "8")
+                .add("ID_usuario", ID_usuario)
+                .build();
 
+        Request request = new Request.Builder()
+                .url(url)
+                .post(requestBody)
+                .build();
 
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onResponse(Call call, Response response) {
+                try {
+                    if (response.isSuccessful()) {
+                        String responseBody = response.body().string();
+                        JSONArray jsonArray = new JSONArray(responseBody);
 
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            JSONObject jsonObject = jsonArray.getJSONObject(i);
+                            dataList.add(jsonObject);
+                        }
 
+                        // Acceder al contexto de la actividad asociada al fragmento
+                        if (getActivity() != null) {
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    adaptadorDocumentos.notifyDataSetChanged();
+                                    adaptadorDocumentos.setFilteredData(dataList);
+                                    adaptadorDocumentos.filter("");
+                                }
+                            });
+                        }
+                    } else {
+                        // La respuesta no fue exitosa
+                        showErrorToast();
+                    }
+                } catch (JSONException e) {
+                    showErrorToast();
+                } catch (IOException e) {
+                    showErrorToast();
+                }
+            }
+
+            @Override
+            public void onFailure(Call call, IOException e) {
+                showErrorToast();
+            }
+        });
+    }
+
+    private void showErrorToast() {
+        // Acceder al contexto de la actividad asociada al fragmento
+        if (getActivity() != null) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Utiles.crearToastPersonalizado(context, "Algo fallo");
+                }
+            });
+        }
+    }
 
 
 /*

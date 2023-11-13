@@ -58,6 +58,8 @@ public class HomeFragment extends Fragment implements AdaptadorCitas.OnActivityA
     private RecyclerView recyclerViewCitas;
     private AdaptadorCitas adaptadorCitas;
     private List<JSONObject> dataList = new ArrayList<>();
+    private List<JSONObject> listaCitas = new ArrayList<>();
+    private List<JSONObject> listaActividades = new ArrayList<>();
 
     private EditText editTextBusqueda;
     private FloatingActionButton botonAgregarCita;
@@ -100,19 +102,22 @@ public class HomeFragment extends Fragment implements AdaptadorCitas.OnActivityA
         botonAgregarCita = view.findViewById(R.id.botonAgregarCita);
         recyclerViewCitas = view.findViewById(R.id.recyclerViewCitas);
         TextView textViewBienvenido = view.findViewById(R.id.textViewBienvenido);
-
+        editTextBusqueda = view.findViewById(R.id.searchEditTextCitas);
+        RecyclerView recyclerViewActividades = view.findViewById(R.id.recyclerViewActividades);
         ContenedorSinInternet = view.findViewById(R.id.ContenedorSinInternet);
         ContenedorContenido = view.findViewById(R.id.ContenedorContenido);
         ContenedorSinContenido = view.findViewById(R.id.ContenedorSinContenido);
         ImageView btnAgregarCita = view.findViewById(R.id.btnAgregarCita);
 
+
+
         textViewBienvenido.setText("¡Bienvenido " + nombre + " !");
 
-
         recyclerViewCitas.setLayoutManager(new LinearLayoutManager(context));
-        adaptadorCitas = new AdaptadorCitas(dataList, context, this);
+        adaptadorCitas = new AdaptadorCitas(listaCitas, context, this);
         recyclerViewCitas.setAdapter(adaptadorCitas);
-        editTextBusqueda = view.findViewById(R.id.searchEditTextCitas);
+
+
 
 
         editTextBusqueda.addTextChangedListener(new TextWatcher() {
@@ -257,6 +262,13 @@ public class HomeFragment extends Fragment implements AdaptadorCitas.OnActivityA
 
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
+
+                        String tipo_evento = jsonObject.getString("tipo_evento");
+                        if (tipo_evento.equalsIgnoreCase("cita")) {
+                            listaCitas.add(jsonObject);
+                        } else if (tipo_evento.equalsIgnoreCase("actividad")) {
+                            listaActividades.add(jsonObject);
+                        }
 
                         dataList.add(jsonObject);
                     }
