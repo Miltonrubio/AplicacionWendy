@@ -54,7 +54,8 @@ dependencies {
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 
-
+    implementation ("com.squareup.okhttp3:okhttp:3.14.9")
+    implementation ("com.squareup.okhttp3:okhttp-urlconnection:3.14.9")
 
 
     implementation("com.google.firebase:firebase-messaging:23.2.1")

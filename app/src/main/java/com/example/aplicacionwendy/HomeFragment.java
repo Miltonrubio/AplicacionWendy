@@ -44,6 +44,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -183,6 +184,21 @@ public class HomeFragment extends Fragment implements AdaptadorCitas.OnActivityA
         botonAgregarCita.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                View customView = LayoutInflater.from(view.getContext()).inflate(R.layout.registrar_cita, null);
+
+                builder.setView(ModalRedondeado(context, customView));
+                AlertDialog dialogAgregarProduccion = builder.create();
+                dialogAgregarProduccion.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                dialogAgregarProduccion.show();
+
+
+                DatePicker datePickerFecha = customView.findViewById(R.id.datePickerFecha);
+                TimePicker timePicker2 = customView.findViewById(R.id.timePicker2);
+                EditText EditDescripcion = customView.findViewById(R.id.EditDescripcion);
+
+                        /*
                 AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
                 LayoutInflater inflater = getLayoutInflater();
                 View dialogView = inflater.inflate(R.layout.agregar_cita, null);
@@ -219,6 +235,9 @@ public class HomeFragment extends Fragment implements AdaptadorCitas.OnActivityA
                 // Mostrar el AlertDialog
                 AlertDialog dialog = builder.create();
                 dialog.show();
+
+
+                         */
             }
         });
 

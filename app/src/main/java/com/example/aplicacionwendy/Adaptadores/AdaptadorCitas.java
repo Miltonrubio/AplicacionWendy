@@ -1,8 +1,13 @@
 package com.example.aplicacionwendy.Adaptadores;
+
 import static android.app.PendingIntent.getActivity;
+
+import static com.example.aplicacionwendy.Adaptadores.Utiles.ModalRedondeado;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -11,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.aplicacionwendy.R;
@@ -34,86 +40,100 @@ public class AdaptadorCitas extends RecyclerView.Adapter<AdaptadorCitas.ViewHold
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_citas, parent, false);
-            return new ViewHolder(view);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_citas, parent, false);
+        return new ViewHolder(view);
 
     }
 
     @SuppressLint("ResourceAsColor")
     public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
 
+        try {
+            JSONObject jsonObject2 = filteredData.get(position);
+            String ID_cita = jsonObject2.optString("ID_cita", "");
+            String ID_usuario = jsonObject2.optString("ID_usuario", "");
+            String fecha_cita = jsonObject2.optString("fecha_cita", "");
+            String detalles_cita = jsonObject2.optString("detalles_cita", "");
+            String hora_cita = jsonObject2.optString("hora_cita", "");
+            String nombre = jsonObject2.optString("nombre", "");
+            String telefono = jsonObject2.optString("telefono", "");
+
+            Bundle bundle = new Bundle();
+            bundle.putString("ID_cita", ID_cita);
+            bundle.putString("ID_usuario", ID_usuario);
+            bundle.putString("fecha_cita", fecha_cita);
+            bundle.putString("detalles_cita", detalles_cita);
+            bundle.putString("hora_cita", hora_cita);
+            bundle.putString("nombre", nombre);
+            bundle.putString("telefono", telefono);
+
+
+            setTextViewText(holder.textNombreUsuario, detalles_cita, "Nombre no disponible");
+            setTextViewText(holder.textTelefonoPaciente, telefono, "Nombre no disponible");
+
             try {
-                JSONObject jsonObject2 = filteredData.get(position);
-                String ID_cita = jsonObject2.optString("ID_cita", "");
-                String ID_usuario = jsonObject2.optString("ID_usuario", "");
-                String fecha_cita = jsonObject2.optString("fecha_cita", "");
-                String detalles_cita = jsonObject2.optString("detalles_cita", "");
-                String hora_cita = jsonObject2.optString("hora_cita", "");
-                String nombre = jsonObject2.optString("nombre", "");
-                String telefono = jsonObject2.optString("telefono", "");
+                SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+                Date date = inputFormat.parse(fecha_cita);
+                SimpleDateFormat outputDayOfWeek = new SimpleDateFormat("EEEE", new Locale("es", "ES"));
+                String dayOfWeek = outputDayOfWeek.format(date);
+                SimpleDateFormat outputFormat = new SimpleDateFormat("d 'de' MMMM 'de' yyyy", new Locale("es", "ES"));
+                String formattedDate = outputFormat.format(date);
 
-                Bundle bundle = new Bundle();
-                bundle.putString("ID_cita", ID_cita);
-                bundle.putString("ID_usuario", ID_usuario);
-                bundle.putString("fecha_cita", fecha_cita);
-                bundle.putString("detalles_cita", detalles_cita);
-                bundle.putString("hora_cita", hora_cita);
-                bundle.putString("nombre", nombre);
-                bundle.putString("telefono", telefono);
+                // Imprimir el resultado
+                System.out.println("Día de la semana: " + dayOfWeek);
+                System.out.println("Fecha formateada: " + formattedDate);
 
+                setTextViewText(holder.fechadeCita, "El " + dayOfWeek + " " + formattedDate, "Fecha no disponible");
 
-                setTextViewText(holder.textNombreUsuario, detalles_cita, "Nombre no disponible");
-                setTextViewText(holder.textTelefonoPaciente, telefono, "Nombre no disponible");
-
-                try {
-                    SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
-                    Date date = inputFormat.parse(fecha_cita);
-                    SimpleDateFormat outputDayOfWeek = new SimpleDateFormat("EEEE",new Locale("es", "ES"));
-                    String dayOfWeek = outputDayOfWeek.format(date);
-                    SimpleDateFormat outputFormat = new SimpleDateFormat("d 'de' MMMM 'de' yyyy", new Locale("es", "ES"));
-                    String formattedDate = outputFormat.format(date);
-
-                    // Imprimir el resultado
-                    System.out.println("Día de la semana: " + dayOfWeek);
-                    System.out.println("Fecha formateada: " + formattedDate);
-
-                    setTextViewText(holder.fechadeCita, "El "+ dayOfWeek+ " " +formattedDate, "Fecha no disponible");
-
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-
-
-
-                try {
-                    SimpleDateFormat inputFormat = new SimpleDateFormat("HH:mm:ss");
-                    Date time = inputFormat.parse(hora_cita);
-                    SimpleDateFormat outputFormat = new SimpleDateFormat("'A las' h:mm a");
-                    String formattedTime = outputFormat.format(time);
-
-                    setTextViewText(holder.horaCita, formattedTime, "Nombre no disponible");
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-
-
-            } catch (Exception e) {
-                throw new RuntimeException(e);
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
+
+
+            try {
+                SimpleDateFormat inputFormat = new SimpleDateFormat("HH:mm:ss");
+                Date time = inputFormat.parse(hora_cita);
+                SimpleDateFormat outputFormat = new SimpleDateFormat("'A las' h:mm a");
+                String formattedTime = outputFormat.format(time);
+
+                setTextViewText(holder.horaCita, formattedTime, "Nombre no disponible");
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    View customView = LayoutInflater.from(view.getContext()).inflate(R.layout.modal_opciones_citas, null);
+
+                    builder.setView(ModalRedondeado(context, customView));
+                    AlertDialog dialogAgregarProduccion = builder.create();
+                    dialogAgregarProduccion.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    dialogAgregarProduccion.show();
+
+
+                }
+            });
+
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
     }
 
     @Override
     public int getItemCount() {
 
-        return  filteredData.size();
+        return filteredData.size();
     }
 
 
-
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView textNombreUsuario,fechadeCita,horaCita, textTelefonoPaciente;
-
+        TextView textNombreUsuario, fechadeCita, horaCita, textTelefonoPaciente;
 
 
         public ViewHolder(@NonNull View itemView) {
@@ -135,7 +155,6 @@ public class AdaptadorCitas extends RecyclerView.Adapter<AdaptadorCitas.ViewHold
             String[] keywords = query.toLowerCase().split(" ");
 
             for (JSONObject item : data) {
-
 
 
                 String ID_cita = item.optString("ID_cita", "").toLowerCase();
@@ -183,9 +202,9 @@ public class AdaptadorCitas extends RecyclerView.Adapter<AdaptadorCitas.ViewHold
 
     public interface OnActivityActionListener {
 
-        void  onDeleteActivity(String ID_actividad);
+        void onDeleteActivity(String ID_actividad);
 
-        void  onEditActivity(String ID_cita, String fecha_cita, String hora_cita, String ID_usuario);
+        void onEditActivity(String ID_cita, String fecha_cita, String hora_cita, String ID_usuario);
 
     }
 
