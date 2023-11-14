@@ -109,7 +109,7 @@ public class ArchivosFragment extends Fragment implements AdaptadorDocumentos.On
 
     private void AbrirGaleria() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("*/*");  // Permite seleccionar cualquier tipo de archivo
+        intent.setType("*/*");
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         startActivityForResult(intent, 2);
     }
@@ -122,22 +122,23 @@ public class ArchivosFragment extends Fragment implements AdaptadorDocumentos.On
         if (requestCode == 2 && resultCode == RESULT_OK && data != null) {
             Uri selectedFileUri = data.getData();
 
-            try {
-                String mimeType = getActivity().getContentResolver().getType(selectedFileUri);
+            String mimeType = getActivity().getContentResolver().getType(selectedFileUri);
 
-                if (mimeType != null && mimeType.startsWith("image")) {
-                    // El archivo seleccionado es una imagen
-                    Bitmap selectedBitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), selectedFileUri);
-                    MandarFoto2(selectedBitmap);
-                } else if (mimeType != null && mimeType.equals("application/pdf")) {
-                    // El archivo seleccionado es un PDF
-                    MandarPDF(selectedFileUri);
-                } else {
-                    // Tipo de archivo no compatible
-                    Log.e("Error", "Tipo de archivo no compatible");
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
+            if (mimeType != null && mimeType.startsWith("image")) {
+
+            /*    // El archivo seleccionado es una imagen
+                Bitmap selectedBitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), selectedFileUri);
+                MandarFoto2(selectedBitmap);
+*/
+
+                Utiles.crearToastPersonalizado(context, "Solo puedes subir archivos pdf");
+            } else if (mimeType != null && mimeType.equals("application/pdf")) {
+                // El archivo seleccionado es un PDF
+                MandarPDF(selectedFileUri);
+            } else {
+                // Tipo de archivo no compatible
+        //        Log.e("Error", "Tipo de archivo no compatible");
+                Utiles.crearToastPersonalizado(context, "Solo puedes subir archivos pdf");
             }
         }
     }

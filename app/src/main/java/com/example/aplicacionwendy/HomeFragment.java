@@ -56,7 +56,8 @@ public class HomeFragment extends Fragment implements AdaptadorCitas.OnActivityA
     String url = "https://envelopesoft.000webhostapp.com/mostrar.php";
     String ID_usuario;
     private RecyclerView recyclerViewCitas;
-    private AdaptadorCitas adaptadorCitas;
+    private AdaptadorCitas adaptadorVerCitas;
+    private AdaptadorCitas adaptadorVerActividades;
     private List<JSONObject> dataList = new ArrayList<>();
     private List<JSONObject> listaCitas = new ArrayList<>();
     private List<JSONObject> listaActividades = new ArrayList<>();
@@ -67,7 +68,7 @@ public class HomeFragment extends Fragment implements AdaptadorCitas.OnActivityA
     Context context;
 
 
-    RelativeLayout ContenedorContenido;
+    ConstraintLayout ContenedorContenido;
 
     ConstraintLayout ContenedorSinInternet;
     ConstraintLayout ContenedorSinContenido;
@@ -99,26 +100,29 @@ public class HomeFragment extends Fragment implements AdaptadorCitas.OnActivityA
         String correo = sharedPreferences.getString("correo", "");
         String telefono = sharedPreferences.getString("telefono", "");
 
-        botonAgregarCita = view.findViewById(R.id.botonAgregarCita);
+        //  botonAgregarCita = view.findViewById(R.id.botonAgregarCita);
         recyclerViewCitas = view.findViewById(R.id.recyclerViewCitas);
-        TextView textViewBienvenido = view.findViewById(R.id.textViewBienvenido);
-        editTextBusqueda = view.findViewById(R.id.searchEditTextCitas);
+        TextView textViewBienvenido = view.findViewById(R.id.bienvenida2);
+        //  editTextBusqueda = view.findViewById(R.id.searchEditTextCitas);
         RecyclerView recyclerViewActividades = view.findViewById(R.id.recyclerViewActividades);
         ContenedorSinInternet = view.findViewById(R.id.ContenedorSinInternet);
         ContenedorContenido = view.findViewById(R.id.ContenedorContenido);
         ContenedorSinContenido = view.findViewById(R.id.ContenedorSinContenido);
-        ImageView btnAgregarCita = view.findViewById(R.id.btnAgregarCita);
-
+        //     ImageView btnAgregarCita = view.findViewById(R.id.btnAgregarCita);
 
 
         textViewBienvenido.setText("¡Bienvenido " + nombre + " !");
 
         recyclerViewCitas.setLayoutManager(new LinearLayoutManager(context));
-        adaptadorCitas = new AdaptadorCitas(listaCitas, context, this);
-        recyclerViewCitas.setAdapter(adaptadorCitas);
+        adaptadorVerCitas = new AdaptadorCitas(listaCitas, context, this);
+        recyclerViewCitas.setAdapter(adaptadorVerCitas);
 
 
+        recyclerViewActividades.setLayoutManager(new LinearLayoutManager(context));
+        adaptadorVerActividades = new AdaptadorCitas(listaActividades, context, this);
+        recyclerViewActividades.setAdapter((adaptadorVerActividades));
 
+        /*
 
         editTextBusqueda.addTextChangedListener(new TextWatcher() {
             @Override
@@ -128,7 +132,7 @@ public class HomeFragment extends Fragment implements AdaptadorCitas.OnActivityA
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                adaptadorCitas.filter(s.toString().toLowerCase());
+                adaptadorVerCitas.filter(s.toString().toLowerCase());
             }
 
 
@@ -136,10 +140,10 @@ public class HomeFragment extends Fragment implements AdaptadorCitas.OnActivityA
             public void afterTextChanged(Editable s) {
             }
         });
-
+*/
         VerCitas(ID_usuario);
 
-
+/*
         btnAgregarCita.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -182,7 +186,7 @@ public class HomeFragment extends Fragment implements AdaptadorCitas.OnActivityA
 
                 builder.setNegativeButton("Cancelar", null);
 */
-
+/*
             }
         });
 
@@ -242,10 +246,10 @@ public class HomeFragment extends Fragment implements AdaptadorCitas.OnActivityA
                 dialog.show();
 
 
-                         */
             }
         });
 
+                         */
     }
 
 
@@ -281,10 +285,14 @@ public class HomeFragment extends Fragment implements AdaptadorCitas.OnActivityA
                         mostrarYOcultar("SinContenido");
                     }
 
-                    adaptadorCitas.notifyDataSetChanged();
-                    adaptadorCitas.setFilteredData(dataList);
-                    adaptadorCitas.filter("");
+                    adaptadorVerCitas.notifyDataSetChanged();
+                    adaptadorVerCitas.setFilteredData(listaCitas);
+                    adaptadorVerCitas.filter("");
 
+
+                    adaptadorVerActividades.notifyDataSetChanged();
+                    adaptadorVerActividades.setFilteredData(listaActividades);
+                    adaptadorVerActividades.filter("");
 
                 } catch (JSONException e) {
                     mostrarYOcultar("SinContenido");
