@@ -13,7 +13,12 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -23,6 +28,7 @@ import com.example.aplicacionwendy.R;
 
 import org.json.JSONObject;
 
+import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -37,6 +43,7 @@ public class AdaptadorCitas extends RecyclerView.Adapter<AdaptadorCitas.ViewHold
     private List<JSONObject> filteredData;
     private List<JSONObject> data;
 
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -48,6 +55,8 @@ public class AdaptadorCitas extends RecyclerView.Adapter<AdaptadorCitas.ViewHold
     @SuppressLint("ResourceAsColor")
     public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
 
+
+
         try {
             JSONObject jsonObject2 = filteredData.get(position);
             String ID_cita = jsonObject2.optString("ID_cita", "");
@@ -57,6 +66,8 @@ public class AdaptadorCitas extends RecyclerView.Adapter<AdaptadorCitas.ViewHold
             String hora_cita = jsonObject2.optString("hora_cita", "");
             String nombre = jsonObject2.optString("nombre", "");
             String telefono = jsonObject2.optString("telefono", "");
+            String tipo_evento = jsonObject2.optString("tipo_evento", "");
+
 
             Bundle bundle = new Bundle();
             bundle.putString("ID_cita", ID_cita);
@@ -110,9 +121,137 @@ public class AdaptadorCitas extends RecyclerView.Adapter<AdaptadorCitas.ViewHold
                     View customView = LayoutInflater.from(view.getContext()).inflate(R.layout.modal_opciones_citas, null);
 
                     builder.setView(ModalRedondeado(context, customView));
-                    AlertDialog dialogAgregarProduccion = builder.create();
-                    dialogAgregarProduccion.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                    dialogAgregarProduccion.show();
+                    AlertDialog dialogCitas = builder.create();
+                    dialogCitas.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    dialogCitas.show();
+
+
+                    TextView EliminarCita = customView.findViewById(R.id.EliminarCita);
+                    TextView EditarCita = customView.findViewById(R.id.EditarCita);
+
+
+                    EditarCita.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+
+                            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                            View customView = LayoutInflater.from(view.getContext()).inflate(R.layout.registrar_cita, null);
+
+                            builder.setView(ModalRedondeado(context, customView));
+                            AlertDialog dialogEditarCita = builder.create();
+                            dialogEditarCita.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                            dialogEditarCita.show();
+
+                            TextView textView8= customView.findViewById(R.id.textView8);
+                            textView8.setText("Actualiza tu cita");
+
+                            EditText EditDescripcion = customView.findViewById(R.id.EditDescripcion);
+                            DatePicker datePickerFecha = customView.findViewById(R.id.datePickerFecha);
+                            TimePicker timePicker2 = customView.findViewById(R.id.timePicker2);
+                            RadioButton radioButtonActividad = customView.findViewById(R.id.radioButtonActividad);
+                            RadioButton radioButtonCita = customView.findViewById(R.id.radioButtonCita);
+                            Button botonCancelar = customView.findViewById(R.id.botonCancelar);
+                            Button buttonAceptar = customView.findViewById(R.id.buttonAceptar);
+
+                            EditDescripcion.setText(detalles_cita);
+
+
+                            if (tipo_evento.equalsIgnoreCase("cita")) {
+                                radioButtonCita.setChecked(true);
+                                radioButtonActividad.setChecked(false);
+                            } else {
+
+                                radioButtonCita.setChecked(false);
+                                radioButtonActividad.setChecked(true);
+                            }
+
+
+                            botonCancelar.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    dialogEditarCita.dismiss();
+                                }
+                            });
+
+                            buttonAceptar.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+
+
+                                    String descripcion = EditDescripcion.getText().toString();
+
+                                    String tipo_evento_seleccionado;
+
+                                    if (radioButtonCita.isChecked()) {
+                                        tipo_evento_seleccionado = "cita";
+                                    } else {
+                                        tipo_evento_seleccionado = "actividad";
+                                    }
+
+                                    int year = datePickerFecha.getYear();
+                                    int month = datePickerFecha.getMonth() + 1; // Sumar 1 ya que los meses van de 0 a 11
+                                    int dayOfMonth = datePickerFecha.getDayOfMonth();
+                                    String fechaFormateada = String.format("%04d-%02d-%02d", year, month, dayOfMonth);
+
+                                    int hourOfDay = timePicker2.getHour();
+                                    int minute = timePicker2.getMinute();
+                                    String horaFormateada = String.format("%02d:%02d", hourOfDay, minute);
+
+
+                                    if (descripcion.isEmpty()) {
+                                        Utiles.crearToastPersonalizado(context, "Tienes campos vacios, por favor rellenalos");
+                                    } else {
+
+                                        dialogEditarCita.dismiss();
+                                        dialogCitas.dismiss();
+                                        //Mandar datos a Api
+                                        actionListener.onEditActivity(ID_cita, fechaFormateada, horaFormateada, descripcion, tipo_evento_seleccionado);
+
+                                    }
+                                }
+                            });
+
+
+                        }
+                    });
+
+
+                    EliminarCita.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                            View customView = LayoutInflater.from(view.getContext()).inflate(R.layout.confirmacion, null);
+
+                            builder.setView(ModalRedondeado(context, customView));
+                            AlertDialog dialogConfirmacion = builder.create();
+                            dialogConfirmacion.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                            dialogConfirmacion.show();
+
+                            Button buttonCancelar = customView.findViewById(R.id.buttonCancelar);
+                            Button buttonAceptar = customView.findViewById(R.id.buttonAceptar);
+
+
+                            buttonCancelar.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    dialogConfirmacion.dismiss();
+                                }
+                            });
+
+                            buttonAceptar.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    dialogConfirmacion.dismiss();
+                                    dialogCitas.dismiss();
+                                    //Mandar Datos a api
+                                    actionListener.onDeleteActivity(ID_cita, tipo_evento);
+                                }
+                            });
+
+
+                        }
+                    });
 
 
                 }
@@ -202,9 +341,9 @@ public class AdaptadorCitas extends RecyclerView.Adapter<AdaptadorCitas.ViewHold
 
     public interface OnActivityActionListener {
 
-        void onDeleteActivity(String ID_actividad);
+        void onDeleteActivity(String ID_cita, String tipo_evento);
 
-        void onEditActivity(String ID_cita, String fecha_cita, String hora_cita, String ID_usuario);
+        void onEditActivity(String ID_cita, String fecha_cita, String hora_cita, String descripcion, String tipo_evento_cita);
 
     }
 

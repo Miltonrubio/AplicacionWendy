@@ -16,11 +16,22 @@
         android:paddingBottom="25dp">
 
 
+        <RadioButton
+            android:id="@+id/radioButtonCita"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="Cita"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.821"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/EditDescripcion" />
+
         <Button
             android:id="@+id/buttonAceptar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="44dp"
+            android:layout_marginTop="80dp"
             android:layout_marginEnd="28dp"
             android:backgroundTint="@color/AzulVerdoso"
             android:text="ACEPTAR"
@@ -90,7 +101,7 @@
             android:id="@+id/EditDescripcion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="908dp"
+            android:layout_marginTop="20dp"
             android:gravity="left"
             android:hint="Arega una descripción para tu cita"
             android:paddingHorizontal="12dp"
@@ -100,7 +111,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/textView7" />
 
         <TextView
             android:id="@+id/textView8"
@@ -131,14 +142,26 @@
 
 
         <Button
+            android:id="@+id/botonCancelar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="28dp"
-            android:layout_marginTop="44dp"
+            android:layout_marginTop="80dp"
             android:backgroundTint="@color/rojo"
             android:text="CANCELAR"
             android:textSize="19dp"
             android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/EditDescripcion" />
+
+        <RadioButton
+            android:id="@+id/radioButtonActividad"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="Actividad"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.167"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/EditDescripcion" />
 
