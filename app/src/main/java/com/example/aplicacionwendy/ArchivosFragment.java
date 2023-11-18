@@ -2,8 +2,12 @@ package com.example.aplicacionwendy;
 
 import static android.app.Activity.RESULT_OK;
 
+import static com.example.aplicacionwendy.Adaptadores.Utiles.ModalRedondeado;
+
 import android.content.Context;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,7 +23,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
+import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.RequestQueue;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.aplicacionwendy.Adaptadores.AdaptadorCitas;
 import com.example.aplicacionwendy.Adaptadores.AdaptadorDocumentos;
 import com.example.aplicacionwendy.Adaptadores.Utiles;
@@ -73,6 +84,14 @@ public class ArchivosFragment extends Fragment implements AdaptadorDocumentos.On
 
     AdaptadorDocumentos adaptadorDocumentos;
 
+    RelativeLayout ContenedorContenido;
+    ConstraintLayout ContenedorSinInternet;
+    ConstraintLayout ContenedorSinContenido;
+
+
+    AlertDialog modalCargando;
+    AlertDialog.Builder builder;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -81,6 +100,13 @@ public class ArchivosFragment extends Fragment implements AdaptadorDocumentos.On
         context = requireContext();
 
         RecyclerView recyclerViewDocs = view.findViewById(R.id.recyclerViewDocs);
+
+        builder = new AlertDialog.Builder(context);
+        builder.setCancelable(false);
+
+        ContenedorContenido = view.findViewById(R.id.ContenedorContenido);
+        ContenedorSinInternet = view.findViewById(R.id.ContenedorSinInternet);
+        ContenedorSinContenido = view.findViewById(R.id.ContenedorSinContenido);
 
         GridLayoutManager gridLayoutManagerDelantero = new GridLayoutManager(context, 2);
         recyclerViewDocs.setLayoutManager(gridLayoutManagerDelantero);
@@ -134,10 +160,11 @@ public class ArchivosFragment extends Fragment implements AdaptadorDocumentos.On
                 Utiles.crearToastPersonalizado(context, "Solo puedes subir archivos pdf");
             } else if (mimeType != null && mimeType.equals("application/pdf")) {
                 // El archivo seleccionado es un PDF
+
                 MandarPDF(selectedFileUri);
             } else {
                 // Tipo de archivo no compatible
-        //        Log.e("Error", "Tipo de archivo no compatible");
+                //        Log.e("Error", "Tipo de archivo no compatible");
                 Utiles.crearToastPersonalizado(context, "Solo puedes subir archivos pdf");
             }
         }
@@ -201,8 +228,6 @@ public class ArchivosFragment extends Fragment implements AdaptadorDocumentos.On
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             Utiles.crearToastPersonalizado(context, "Archivo PDF enviado al servidor");
-            Intent intent = new Intent(context, Activity_Binding.class);
-            startActivity(intent);
             VerDocs(ID_usuario);
         }
     }
@@ -210,6 +235,7 @@ public class ArchivosFragment extends Fragment implements AdaptadorDocumentos.On
     private void VerDocs(String ID_usuario) {
         dataList.clear();
 
+        modalCargando = Utiles.ModalCargando(context, builder);
         OkHttpClient client = new OkHttpClient();
 
         RequestBody requestBody = new FormBody.Builder()
@@ -243,207 +269,111 @@ public class ArchivosFragment extends Fragment implements AdaptadorDocumentos.On
                                     adaptadorDocumentos.notifyDataSetChanged();
                                     adaptadorDocumentos.setFilteredData(dataList);
                                     adaptadorDocumentos.filter("");
+
+                                    if (dataList.size() > 0) {
+                                        MostrarLayout("Contenido");
+                                    } else {
+                                        MostrarLayout("SinContenido");
+                                    }
                                 }
                             });
                         }
                     } else {
-                        // La respuesta no fue exitosa
-                        showErrorToast();
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                MostrarLayout("SinContenido");
+                            }
+                        });
                     }
                 } catch (JSONException e) {
-                    showErrorToast();
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            MostrarLayout("SinContenido");
+                        }
+                    });
                 } catch (IOException e) {
-                    showErrorToast();
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            MostrarLayout("SinContenido");
+                        }
+                    });
                 }
             }
 
+
             @Override
             public void onFailure(Call call, IOException e) {
-                showErrorToast();
+
+
+                MostrarLayout("SinInternet");
             }
         });
     }
 
-    private void showErrorToast() {
-        // Acceder al contexto de la actividad asociada al fragmento
-        if (getActivity() != null) {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Utiles.crearToastPersonalizado(context, "Algo fallo");
-                }
-            });
+
+    private void MostrarLayout(String estado) {
+
+        if (estado.equalsIgnoreCase("SinContenido")) {
+
+            ContenedorContenido.setVisibility(View.GONE);
+            ContenedorSinInternet.setVisibility(View.GONE);
+            ContenedorSinContenido.setVisibility(View.VISIBLE);
+        } else if (estado.equalsIgnoreCase("SinInternet")) {
+
+            ContenedorContenido.setVisibility(View.GONE);
+            ContenedorSinInternet.setVisibility(View.VISIBLE);
+            ContenedorSinContenido.setVisibility(View.GONE);
+        } else {
+            ContenedorContenido.setVisibility(View.VISIBLE);
+            ContenedorSinInternet.setVisibility(View.GONE);
+            ContenedorSinContenido.setVisibility(View.GONE);
+
+        }
+        onLoadComplete();
+
+    }
+
+    private void onLoadComplete() {
+        if (modalCargando.isShowing() && modalCargando != null) {
+            modalCargando.dismiss();
         }
     }
 
 
-/*
-    private void AbrirGaleria() {
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(intent, 2);
-    }
 
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    public void onDeleteArchivo(String ID_archivo) {
 
-        if (requestCode == 2 && resultCode == RESULT_OK && data != null) {
-            // La imagen seleccionada desde la galería está en 'data.getData()'
-            Uri selectedImageUri = data.getData();
-
-            try {
-                Bitmap selectedBitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), selectedImageUri);
-
-                // Luego puedes procesar 'selectedBitmap' y enviarlo al servidor
-                MandarFoto2(selectedBitmap);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-    }
-
-
-    private void MandarFoto2(Bitmap imageBitmap) {
-        new SendImageTask().execute(imageBitmap);
-    }
-
-    @Override
-    public void onDeleteActivity(String ID_actividad) {
-
-    }
-
-
-    private class SendImageTask extends AsyncTask<Bitmap, Void, Void> {
-
-        @Override
-        protected Void doInBackground(Bitmap... bitmaps) {
-            Bitmap imageBitmap = bitmaps[0];
-
-            OkHttpClient client = new OkHttpClient();
-
-            String nombreArchivo = "imagen" + System.currentTimeMillis() + ".jpg";
-            //  File imageFile = bitmapToFile(imageBitmap, "image.jpg");
-            File imageFile = bitmapToFile(imageBitmap, nombreArchivo);
-
-            RequestBody requestBody = new MultipartBody.Builder()
-                    .setType(MultipartBody.FORM)
-                    .addFormDataPart("opcion", "7")
-                    .addFormDataPart("ID_usuario", "1")
-                    .addFormDataPart("archivo", nombreArchivo,
-                            RequestBody.create(MediaType.parse("multipart/form-data"), imageFile))
-
-                    .build();
-            Request request = new Request.Builder()
-                    .url(url)
-                    .post(requestBody)
-                    .build();
-            try {
-                Response response = client.newCall(request).execute();
-                if (response.isSuccessful()) {
-                    String responseData = response.body().string();
-                    Log.d("Respuesta del servidor", responseData);
-                } else {
-                    Log.e("Error en la solicitud", String.valueOf(response.code()));
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            // Toast.makeText(SubirFotosUnidadesActivity.this, "Imagen " + idSerVenta + " Enviada al servidor", Toast.LENGTH_SHORT).show();
-            Utiles.crearToastPersonalizado(context, "Imagen enviada al servidor");
-            Intent intent = new Intent(context, Activity_Binding.class);
-            startActivity(intent);
-        }
-    }
-
-
-    private File bitmapToFile(Bitmap bitmap, String fileName) {
-        File file = new File(getActivity().getCacheDir(), fileName);
-        try {
-            file.createNewFile();
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 30, bos);
-            byte[] bitmapData = bos.toByteArray();
-
-            FileOutputStream fos = new FileOutputStream(file);
-            fos.write(bitmapData);
-            fos.flush();
-            fos.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return file;
-    }
-
-    */
-
-
-
-
-
-
-
-/*
-    private void VerDocs(String idusuario) {
-
-        dataList.clear();
-
-        StringRequest postrequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
-            @Override
+        StringRequest request2 = new StringRequest(com.android.volley.Request.Method.POST, url, new com.android.volley.Response.Listener<String>() {
             public void onResponse(String response) {
-                try {
-                    JSONArray jsonArray = new JSONArray(response);
+                Utiles.crearToastPersonalizado(context, "Se eliminó correctamente");
+                VerDocs(ID_usuario);
 
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        JSONObject jsonObject = jsonArray.getJSONObject(i);
-
-                        dataList.add(jsonObject);
-                    }
-
-
-                    adaptadorDocumentos.notifyDataSetChanged();
-                    adaptadorDocumentos.setFilteredData(dataList);
-                    adaptadorDocumentos.filter("");
-
-
-                } catch (JSONException e) {
-                    //     mostrarYOcultar("SinContenido");
-                    Utiles.crearToastPersonalizado(context, "Algo fallo");
-                }
             }
-        }, new Response.ErrorListener() {
+        }, new com.android.volley.Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Utiles.crearToastPersonalizado(context, "Algo fallo");
+                Utiles.crearToastPersonalizado(context, "No se eliminó, revisa la conexión");
             }
-        }) {
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<>();
-                params.put("opcion", "8");
-                params.put("ID_usuario", idusuario);
+        }
+        ) {
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("opcion", "12");
+                params.put("ID_archivo", ID_archivo);
                 return params;
             }
         };
 
-        Volley.newRequestQueue(context).add(postrequest);
-    }
-
-
-
-
- */
-
-
-    @Override
-    public void onDeleteActivity(String ID_actividad) {
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        requestQueue.add(request2);
 
     }
+
+
 }

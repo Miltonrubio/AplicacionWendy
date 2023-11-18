@@ -52,6 +52,7 @@ public class AdaptadorCitas extends RecyclerView.Adapter<AdaptadorCitas.ViewHold
 
     }
 
+    String tipo_evento_seleccionado;
     @SuppressLint("ResourceAsColor")
     public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
 
@@ -151,6 +152,11 @@ public class AdaptadorCitas extends RecyclerView.Adapter<AdaptadorCitas.ViewHold
                             TimePicker timePicker2 = customView.findViewById(R.id.timePicker2);
                             RadioButton radioButtonActividad = customView.findViewById(R.id.radioButtonActividad);
                             RadioButton radioButtonCita = customView.findViewById(R.id.radioButtonCita);
+                            radioButtonCita.setChecked(true);
+                            RadioButton radioButtonEvento = customView.findViewById(R.id.radioButtonEvento);
+
+
+
                             Button botonCancelar = customView.findViewById(R.id.botonCancelar);
                             Button buttonAceptar = customView.findViewById(R.id.buttonAceptar);
 
@@ -160,11 +166,54 @@ public class AdaptadorCitas extends RecyclerView.Adapter<AdaptadorCitas.ViewHold
                             if (tipo_evento.equalsIgnoreCase("cita")) {
                                 radioButtonCita.setChecked(true);
                                 radioButtonActividad.setChecked(false);
-                            } else {
+                                radioButtonEvento.setChecked(false);
+                            } else if(tipo_evento.equalsIgnoreCase("evento")) {
+                                radioButtonEvento.setChecked(true);
+                                radioButtonCita.setChecked(false);
+                                radioButtonActividad.setChecked(false);
+                            }else {
 
+                                radioButtonEvento.setChecked(false);
                                 radioButtonCita.setChecked(false);
                                 radioButtonActividad.setChecked(true);
                             }
+
+
+
+                            radioButtonActividad.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+
+                                    tipo_evento_seleccionado = "actividad";
+                                    radioButtonEvento.setChecked(false);
+                                    radioButtonActividad.setChecked(true);
+                                    radioButtonCita.setChecked(false);
+                                }
+                            });
+
+                            radioButtonCita.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+
+                                    tipo_evento_seleccionado = "cita";
+                                    radioButtonEvento.setChecked(false);
+                                    radioButtonActividad.setChecked(false);
+                                    radioButtonCita.setChecked(true);
+                                }
+                            });
+
+
+                            radioButtonEvento.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+
+                                    tipo_evento_seleccionado = "evento";
+                                    radioButtonEvento.setChecked(true);
+                                    radioButtonActividad.setChecked(false);
+                                    radioButtonCita.setChecked(false);
+                                }
+                            });
+
 
 
                             botonCancelar.setOnClickListener(new View.OnClickListener() {
@@ -181,12 +230,24 @@ public class AdaptadorCitas extends RecyclerView.Adapter<AdaptadorCitas.ViewHold
 
                                     String descripcion = EditDescripcion.getText().toString();
 
-                                    String tipo_evento_seleccionado;
-
                                     if (radioButtonCita.isChecked()) {
                                         tipo_evento_seleccionado = "cita";
-                                    } else {
+
+                                        radioButtonEvento.setChecked(false);
+                                        radioButtonCita.setChecked(true);
+                                        radioButtonActividad.setChecked(false);
+
+                                    } else if(radioButtonActividad.isChecked()){
+
+                                        radioButtonEvento.setChecked(false);
+                                        radioButtonCita.setChecked(false);
+                                        radioButtonActividad.setChecked(true);
                                         tipo_evento_seleccionado = "actividad";
+                                    }else {
+                                        radioButtonEvento.setChecked(true);
+                                        radioButtonCita.setChecked(false);
+                                        radioButtonActividad.setChecked(false);
+                                        tipo_evento_seleccionado = "evento";
                                     }
 
                                     int year = datePickerFecha.getYear();

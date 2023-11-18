@@ -12,6 +12,24 @@
     </style>
 
 
+    <style name="MyDatePickerStyle">
+        <!-- Cambia el color de fondo -->
+        <item name="android:background">@color/white</item>
+        <!-- Cambia el color del texto -->
+        <item name="android:textColor">@color/black</item>
+        <!-- Cambia el color de los números y el calendario -->
+        <item name="android:calendarTextColor">@color/verdesito</item>
+        <!-- Cambia el color del fondo del diálogo de selección de fecha -->
+        <item name="android:datePickerDialogTheme">@style/MyDatePickerDialogTheme</item>
+    </style>
+
+    <style name="MyDatePickerDialogTheme" parent="Theme.AppCompat.Light.Dialog">
+        <!-- Cambia el color del fondo del diálogo -->
+        <item name="android:windowBackground">@color/verdesito</item>
+        <!-- Cambia el color del texto del diálogo -->
+        <item name="android:textColorPrimary">@color/verdesito</item>
+    </style>
+
 
 </resources>
 

@@ -149,18 +149,48 @@ public class HomeFragment extends Fragment implements AdaptadorCitas.OnActivityA
                 EditText EditDescripcion = customView.findViewById(R.id.EditDescripcion);
 
                 RadioButton radioButtonCita= customView.findViewById(R.id.radioButtonCita);
-                radioButtonCita.setChecked(true);
                 RadioButton radioButtonActividad= customView.findViewById(R.id.radioButtonActividad);
+                RadioButton radioButtonEvento= customView.findViewById(R.id.radioButtonEvento);
+
                 Button buttonAceptar = customView.findViewById(R.id.buttonAceptar);
                 Button botonCancelar = customView.findViewById(R.id.botonCancelar);
 
 
-                if (radioButtonActividad.isChecked()){
-                    tipo_evento="actividad";
-                }else {
-                    tipo_evento="cita";
+                radioButtonCita.setChecked(true);
 
-                }
+                radioButtonActividad.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        tipo_evento="actividad";
+                        radioButtonEvento.setChecked(false);
+                        radioButtonActividad.setChecked(true);
+                        radioButtonCita.setChecked(false);
+                    }
+                });
+
+                radioButtonCita.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        tipo_evento="cita";
+                        radioButtonEvento.setChecked(false);
+                        radioButtonActividad.setChecked(false);
+                        radioButtonCita.setChecked(true);
+                    }
+                });
+
+
+                radioButtonEvento.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        tipo_evento="evento";
+                        radioButtonEvento.setChecked(true);
+                        radioButtonActividad.setChecked(false);
+                        radioButtonCita.setChecked(false);
+                    }
+                });
 
 
 

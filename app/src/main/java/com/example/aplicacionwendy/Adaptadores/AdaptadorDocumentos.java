@@ -70,6 +70,7 @@ public class AdaptadorDocumentos extends RecyclerView.Adapter<AdaptadorDocumento
         try {
             JSONObject jsonObject2 = filteredData.get(position);
             String ID_archivo = jsonObject2.optString("ID_archivo", "");
+            String nombreVisualizacion = jsonObject2.optString("nombreVisualizacion", "");
             String nombre_archivo = jsonObject2.optString("nombre_archivo", "");
             String fecha = jsonObject2.optString("fecha", "");
 
@@ -77,7 +78,7 @@ public class AdaptadorDocumentos extends RecyclerView.Adapter<AdaptadorDocumento
             bundle.putString("ID_archivo", ID_archivo);
             bundle.putString("fecha", fecha);
 
-            holder.textNombre.setText(nombre_archivo);
+            setTextViewText(holder.textNombre, nombreVisualizacion, "Asigna un nombre a este archivo");
             holder.textPuesto.setText("Agregado el " + fecha);
 
 
@@ -85,9 +86,45 @@ public class AdaptadorDocumentos extends RecyclerView.Adapter<AdaptadorDocumento
                 @Override
                 public void onClick(View view) {
 
-                    String pdfUrl = "https://envelopesoft.000webhostapp.com/docs/" + nombre_archivo;
 
-                    new DownloadPdfTask().execute(pdfUrl);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    View customView = LayoutInflater.from(view.getContext()).inflate(R.layout.opciones_archivos, null);
+
+                    builder.setView(ModalRedondeado(context, customView));
+                    AlertDialog dialogArchivos = builder.create();
+                    dialogArchivos.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    dialogArchivos.show();
+
+
+                    TextView EliminarArchivo = customView.findViewById(R.id.EliminarArchivo);
+                    TextView verArchivo = customView.findViewById(R.id.verArchivo);
+                    TextView CambiarNombre = customView.findViewById(R.id.CambiarNombre);
+
+
+                    CambiarNombre.setVisibility(View.GONE);
+
+
+
+                    EliminarArchivo.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            dialogArchivos.dismiss();
+                            actionListener.onDeleteArchivo(ID_archivo);
+
+                        }
+                    });
+
+
+                    verArchivo.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            String pdfUrl = "https://envelopesoft.000webhostapp.com/docs/" + nombre_archivo;
+
+                            new DownloadPdfTask().execute(pdfUrl);
+                        }
+                    });
+
                 }
             });
 
@@ -239,7 +276,7 @@ public class AdaptadorDocumentos extends RecyclerView.Adapter<AdaptadorDocumento
 
     public interface OnActivityActionListener {
 
-        void onDeleteActivity(String ID_actividad);
+        void onDeleteArchivo(String ID_archivo);
 
 
     }
